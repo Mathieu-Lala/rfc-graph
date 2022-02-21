@@ -1,0 +1,12 @@
+debug/
+target/
+
+Cargo.lock
+
+**/*.rs.bk
+
+*.pdb
+
+cache.json
+input.dot
+output.svg
