@@ -1,4 +1,4 @@
-use rfc_graph::Database;
+use rfc_graph::RfcGraph;
 
 #[derive(clap::Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -16,9 +16,8 @@ struct Args {
 async fn main() -> anyhow::Result<()> {
     let args = <Args as clap::StructOpt>::parse();
 
-    let mut db = Database::default();
+    let rfcs = RfcGraph::get(args.root, args.recursion_max).await;
 
-    let rfcs = db.rec_get_rfc(args.root, args.recursion_max).await;
     println!("{:?}", rfcs);
 
     Ok(())

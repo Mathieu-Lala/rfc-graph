@@ -1,12 +1,20 @@
+//! Fast and easy queue abstraction.
+
+#![warn(missing_docs)]
+
 const LINK: &str = "https://datatracker.ietf.org/doc/html/rfc";
 
-pub struct Database {
+/// The `RfcGraph` type, wrapping all the logics of this crate.
+///
+/// Use the function [RfcGraph::get]
+pub struct RfcGraph {
     did_search: std::collections::HashMap<i32, (bool, petgraph::prelude::NodeIndex<u32>)>,
     graph: petgraph::Graph<i32, i32>,
     cache: std::collections::HashMap<i32, Vec<i32>>,
 }
 
-impl Default for Database {
+/// Will initialize a graph model, and load a `cache.json` file to reduce web query.
+impl Default for RfcGraph {
     fn default() -> Self {
         Self {
             did_search: Default::default(),
@@ -19,7 +27,8 @@ impl Default for Database {
     }
 }
 
-impl Drop for Database {
+/// Will save the `cache.json` file for next usage.
+impl Drop for RfcGraph {
     fn drop(&mut self) {
         serde_json::to_string_pretty(&self.cache)
             .map_err(anyhow::Error::msg)
@@ -28,7 +37,7 @@ impl Drop for Database {
     }
 }
 
-impl Database {
+impl RfcGraph {
     async fn query_list_links_of_rfc(&mut self, number: i32) -> Vec<i32> {
         if let Some(links) = self.cache.get(&number) {
             return links.clone();
@@ -81,7 +90,7 @@ impl Database {
     }
 }
 
-impl Database {
+impl RfcGraph {
     fn get_or_emplace(&mut self, number: i32, search: bool) -> petgraph::prelude::NodeIndex<u32> {
         match self.did_search.get(&number) {
             Some((_, i)) => *i,
@@ -138,10 +147,10 @@ impl Database {
     }
 }
 
-impl Database {
-    // NOTE: should be a stream, but stream! can't be recursive...
+impl RfcGraph {
     #[async_recursion::async_recursion]
-    pub async fn rec_get_rfc<'a>(&'a mut self, number: i32, rec_max: u32) -> Vec<i32> {
+    async fn rec_get_rfc<'a>(&'a mut self, number: i32, rec_max: u32) -> Vec<i32> {
+        // NOTE: should be a stream, but stream! can't be recursive...
         let mut output = vec![];
         if rec_max != 0 {
             let v = self.add(number).await.unwrap_or_default();
@@ -151,5 +160,12 @@ impl Database {
             }
         }
         output
+    }
+
+    /// Initialize a `RfcGraph` object and query the graph around the node `root`.
+    ///
+    /// The function will iterate in the graph recursively for `recursion_max`.
+    pub async fn get(root: i32, recursion_max: u32) -> Vec<i32> {
+        RfcGraph::default().rec_get_rfc(root, recursion_max).await
     }
 }

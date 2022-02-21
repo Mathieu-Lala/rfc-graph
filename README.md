@@ -1,10 +1,26 @@
 # RFC Graph
 
+<div align="center">
+  <a href="https://crates.io/crates/rfc-graph">
+    <img src="https://img.shields.io/crates/v/rfc-graph.svg"
+      alt="Crates.io" />
+  </a>
+  <a href="https://docs.rs/rfc-grap">
+    <img src="https://docs.rs/rfc-graph/badge.svg"
+      alt="docs" />
+  </a>
+</div>
+
 How the rfc are referencing each other ?
+
+```rs
+let rfcs: Vec<i32> = rfc_graph::RfcGraph::get(5322, 3).await;
+println!("{rfcs:?}");
+```
 
 ```sh
 $> cargo run -- -h
-rfc-graph 0.1.0
+rfc-graph 0.1.1
 
 USAGE:
     rfc-graph [OPTIONS] --root <ROOT>
@@ -43,31 +59,15 @@ I would like to add the following features :
 * display the title of the rfc
 * show the status following this legend :
 
-| Status                            | Color                                                          |
-| --------------------------------- | -------------------------------------------------------------  |
-| Unknown                           | <span class='cplate bgwhite'>&nbsp;&nbsp;&nbsp;&nbsp;</span>   |
-| Draft                             | <span class='cplate bgred'>&nbsp;&nbsp;&nbsp;&nbsp;</span>     |
-| Informational                     | <span class='cplate bgorange'>&nbsp;&nbsp;&nbsp;&nbsp;</span>  |
-| Experimental                      | <span class='cplate bgyellow'>&nbsp;&nbsp;&nbsp;&nbsp;</span>  |
-| Best Common Practice              | <span class='cplate bgmagenta'>&nbsp;&nbsp;&nbsp;&nbsp;</span> |
-| Proposed Standard                 | <span class='cplate bgblue'>&nbsp;&nbsp;&nbsp;&nbsp;</span>    |
-| Draft Standard (old designation)  | <span class='cplate bgcyan'>&nbsp;&nbsp;&nbsp;&nbsp;</span>    |
-| Internet Standard                 | <span class='cplate bggreen'>&nbsp;&nbsp;&nbsp;&nbsp;</span>   |
-| Historic                          | <span class='cplate bggrey'>&nbsp;&nbsp;&nbsp;&nbsp;</span>    |
-| Obsolete                          | <span class='cplate bgbrown'>&nbsp;&nbsp;&nbsp;&nbsp;</span>   |
-
-<style>
-.cplate   { font-size: 70%; border: solid grey 1px; }
-
-.bgwhite  { background-color: white; }
-.bgred    { background-color: #F44; }
-.bggrey   { background-color: #666; }
-.bgbrown  { background-color: #840; }
-.bgorange { background-color: #FA0; }
-.bgyellow { background-color: #EE0; }
-.bgmagenta{ background-color: #F4F; }
-.bgblue   { background-color: #66F; }
-.bgcyan   { background-color: #4DD; }
-.bggreen  { background-color: #4F4; }
-
-</style>
+| Status                            | Color                                                            |
+| --------------------------------- | ---------------------------------------------------------------- |
+| Unknown                           | <div style="height:20px;width:20px;background-color:#FFF"></div> |
+| Draft                             | <div style="height:20px;width:20px;background-color:#F44"></div> |
+| Informational                     | <div style="height:20px;width:20px;background-color:#FA0"></div> |
+| Experimental                      | <div style="height:20px;width:20px;background-color:#EE0"></div> |
+| Best Common Practice              | <div style="height:20px;width:20px;background-color:#F4F"></div> |
+| Proposed Standard                 | <div style="height:20px;width:20px;background-color:#66F"></div> |
+| Draft Standard (old designation)  | <div style="height:20px;width:20px;background-color:#4DD"></div> |
+| Internet Standard                 | <div style="height:20px;width:20px;background-color:#4F4"></div> |
+| Historic                          | <div style="height:20px;width:20px;background-color:#666"></div> |
+| Obsolete                          | <div style="height:20px;width:20px;background-color:#840"></div> |
