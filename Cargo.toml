@@ -1,13 +1,16 @@
 [package]
 name = "rfc-graph"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
+
 description = "How the rfc are referencing each other"
 homepage = "https://github.com/Mathieu-Lala/rfc-graph"
 repository = "https://github.com/Mathieu-Lala/rfc-graph"
+
 readme = "README.md"
 keywords = ["api", "rfc", "graph", "parser", "data"]
+categories = ["development-tools"]
 
 [dependencies]
 clap = { version = "3.1.0", features = ["derive"] }

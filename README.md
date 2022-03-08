@@ -14,8 +14,8 @@
 How the rfc are referencing each other ?
 
 ```rs
-let rfcs: Vec<i32> = rfc_graph::RfcGraph::get(5322, 3).await;
-println!("{rfcs:?}");
+let (rfcs_linked, status) = rfc_graph::RfcGraph::get(5322, 3).await;
+println!("{rfcs:?} {status:?}");
 ```
 
 ```sh
@@ -52,22 +52,27 @@ $> cargo run -- --root 5322 --recursion-max 2
 
 The referencing in the rfcs are exponential, so you **might not** want to run with `--recursion-max 4`
 
-## Next features
+## Color
+
+| Status                            | Color  |
+| --------------------------------- | ------ |
+| Unknown                           | ⬜     |
+| Draft                             | 🟥     |
+| Informational                     | 🟧     |
+| Experimental                      | 🟨     |
+| Best Common Practice              | 🟪     |
+| Proposed Standard                 | 🟦     |
+| Draft Standard (old designation)  | :cyan: |
+| Internet Standard                 | 🟩     |
+| Historic                          | ⬛     |
+| Obsolete                          | 🟫     |
+
+Leaf node status is unknown as the web scraping is not done for them
+
+## Next Features
 
 I would like to add the following features :
 
 * display the title of the rfc
-* show the status following this legend :
-
-| Status                            | Color                                                            |
-| --------------------------------- | ---------------------------------------------------------------- |
-| Unknown                           | <div style="height:20px;width:20px;background-color:#FFF"></div> |
-| Draft                             | <div style="height:20px;width:20px;background-color:#F44"></div> |
-| Informational                     | <div style="height:20px;width:20px;background-color:#FA0"></div> |
-| Experimental                      | <div style="height:20px;width:20px;background-color:#EE0"></div> |
-| Best Common Practice              | <div style="height:20px;width:20px;background-color:#F4F"></div> |
-| Proposed Standard                 | <div style="height:20px;width:20px;background-color:#66F"></div> |
-| Draft Standard (old designation)  | <div style="height:20px;width:20px;background-color:#4DD"></div> |
-| Internet Standard                 | <div style="height:20px;width:20px;background-color:#4F4"></div> |
-| Historic                          | <div style="height:20px;width:20px;background-color:#666"></div> |
-| Obsolete                          | <div style="height:20px;width:20px;background-color:#840"></div> |
+* improve the graph view (for huge graph readability)
+* render the status of the leaf node

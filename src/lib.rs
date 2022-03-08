@@ -1,14 +1,78 @@
 //! Fast and easy queue abstraction.
 
 #![warn(missing_docs)]
+#![warn(clippy::all)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![warn(clippy::cargo)]
 
 const LINK: &str = "https://datatracker.ietf.org/doc/html/rfc";
 
+#[derive(Debug, Clone, Copy)]
+enum RfcStatus {
+    Unknown,            // #FFF
+    Draft,              // #F44
+    Informational,      // #FA0
+    Experimental,       // #EE0
+    BestCommonPractice, // #F4F
+    ProposedStandard,   // #66F
+    DraftStandard,      // #4DD
+    InternetStandard,   // #4F4
+    Historic,           // #666
+    Obsolete,           // #840
+}
+
+impl Default for RfcStatus {
+    fn default() -> Self {
+        Self::Unknown
+    }
+}
+
+impl RfcStatus {
+    const fn as_color(self) -> &'static str {
+        match self {
+            Self::Unknown => "#F0F0F0",
+            Self::Draft => "#F04040",
+            Self::Informational => "#F0A000",
+            Self::Experimental => "#E0E000",
+            Self::BestCommonPractice => "#F040F0",
+            Self::ProposedStandard => "#6060F0",
+            Self::DraftStandard => "#40D0D0",
+            Self::InternetStandard => "#40F040",
+            Self::Historic => "#606060",
+            Self::Obsolete => "#804000",
+        }
+    }
+
+    fn from_classes(classes: Vec<&str>) -> Option<Self> {
+        for i in classes {
+            let found = match i {
+                "bgwhite" => Some(Self::Unknown),
+                "bgred" => Some(Self::Draft),
+                "bggrey" => Some(Self::Historic),
+                "bgbrown" => Some(Self::Obsolete),
+                "bgorange" => Some(Self::Informational),
+                "bgyellow" => Some(Self::Experimental),
+                "bgmagenta" => Some(Self::BestCommonPractice),
+                "bgblue" => Some(Self::ProposedStandard),
+                "bgcyan" => Some(Self::DraftStandard),
+                "bggreen" => Some(Self::InternetStandard),
+                _ => None,
+            };
+            if found.is_some() {
+                return found;
+            }
+        }
+        None
+    }
+}
+
 /// The `RfcGraph` type, wrapping all the logics of this crate.
 ///
-/// Use the function [RfcGraph::get]
+/// Use the function [`RfcGraph::get`]
 pub struct RfcGraph {
-    did_search: std::collections::HashMap<i32, (bool, petgraph::prelude::NodeIndex<u32>)>,
+    did_search:
+        std::collections::HashMap<i32, (bool, petgraph::prelude::NodeIndex<u32>, RfcStatus)>,
     graph: petgraph::Graph<i32, i32>,
     cache: std::collections::HashMap<i32, Vec<i32>>,
 }
@@ -17,8 +81,8 @@ pub struct RfcGraph {
 impl Default for RfcGraph {
     fn default() -> Self {
         Self {
-            did_search: Default::default(),
-            graph: Default::default(),
+            did_search: std::collections::HashMap::default(),
+            graph: petgraph::Graph::default(),
             cache: std::fs::read("cache.json")
                 .map_err(anyhow::Error::msg)
                 .and_then(|file| serde_json::from_slice(&file).map_err(anyhow::Error::msg))
@@ -38,10 +102,10 @@ impl Drop for RfcGraph {
 }
 
 impl RfcGraph {
-    async fn query_list_links_of_rfc(&mut self, number: i32) -> Vec<i32> {
-        if let Some(links) = self.cache.get(&number) {
-            return links.clone();
-        }
+    async fn query_list_links_of_rfc(&mut self, number: i32) -> (Vec<i32>, RfcStatus) {
+        // if let Some(links) = self.cache.get(&number) {
+        //     return links.clone();
+        // }
 
         let html = reqwest::get(format!("{LINK}{number}"))
             .await
@@ -85,39 +149,54 @@ impl RfcGraph {
             .filter(|i| *i != number)
             .collect::<Vec<_>>();
 
+        let selector =
+            scraper::Selector::parse(r#"div[title="Click for colour legend."]"#).unwrap();
+
+        let html_color = document.select(&selector).next().unwrap();
+        let html_color_classes =
+            RfcStatus::from_classes(html_color.value().classes().collect::<Vec<_>>()).unwrap();
+        println!("{:?}", html_color_classes);
+
         self.cache.insert(number, links.clone());
-        links
+        (links, html_color_classes)
     }
 }
 
 impl RfcGraph {
-    fn get_or_emplace(&mut self, number: i32, search: bool) -> petgraph::prelude::NodeIndex<u32> {
-        match self.did_search.get(&number) {
-            Some((_, i)) => *i,
-            None => {
-                let node = self.graph.add_node(number);
-                self.did_search.insert(number, (search, node));
-                node
+    fn get_or_emplace(
+        &mut self,
+        number: i32,
+        search: bool,
+        color: Option<RfcStatus>,
+    ) -> petgraph::prelude::NodeIndex<u32> {
+        if let Some((_, i, status)) = self.did_search.get_mut(&number) {
+            if let Some(color) = color {
+                *status = color;
             }
+            *i
+        } else {
+            let node = self.graph.add_node(number);
+            self.did_search
+                .insert(number, (search, node, color.unwrap_or(RfcStatus::Unknown)));
+            node
         }
     }
 
-    async fn add(&mut self, number: i32) -> Option<Vec<i32>> {
-        if !self.did_search.get(&number).map(|i| i.0).unwrap_or(false) {
-            let number_node = self.get_or_emplace(number, true);
-            let links = self.query_list_links_of_rfc(number).await;
-
-            let nodes_linked = links
-                .iter()
-                .map(|i| (number_node, self.get_or_emplace(*i, false)))
-                .collect::<Vec<_>>();
-
-            self.graph.extend_with_edges(nodes_linked);
-            self.to_svg();
-            Some(links)
-        } else {
-            None
+    async fn add(&mut self, number: i32) -> Option<(Vec<i32>, RfcStatus)> {
+        if self.did_search.get(&number).map_or(false, |i| i.0) {
+            return None;
         }
+        let (linked, color) = self.query_list_links_of_rfc(number).await;
+        let number_node = self.get_or_emplace(number, true, Some(color));
+
+        let nodes_linked = linked
+            .iter()
+            .map(|i| (number_node, self.get_or_emplace(*i, false, None)))
+            .collect::<Vec<_>>();
+
+        self.graph.extend_with_edges(nodes_linked);
+        self.to_svg();
+        Some((linked, color))
     }
 
     fn to_svg(&self) {
@@ -132,7 +211,19 @@ impl RfcGraph {
             &mut file,
             format_args!(
                 "{:?}",
-                petgraph::dot::Dot::with_config(&self.graph, &[petgraph::dot::Config::EdgeNoLabel])
+                petgraph::dot::Dot::with_attr_getters(
+                    &self.graph,
+                    &[petgraph::dot::Config::EdgeNoLabel],
+                    &|_, _| String::new(),
+                    &|_, node| {
+                        let (_, _, color) = self.did_search.get(node.1).unwrap();
+
+                        format!(
+                            "color=\"{color}\" style=\"filled\"",
+                            color = color.as_color()
+                        )
+                    }
+                )
             ),
         )
         .unwrap();
@@ -153,9 +244,9 @@ impl RfcGraph {
         // NOTE: should be a stream, but stream! can't be recursive...
         let mut output = vec![];
         if rec_max != 0 {
-            let v = self.add(number).await.unwrap_or_default();
-            output.extend(&v);
-            for i in v {
+            let (linked, _) = self.add(number).await.unwrap_or_default();
+            output.extend(&linked);
+            for i in linked {
                 output.extend(self.rec_get_rfc(i, rec_max - 1).await);
             }
         }
@@ -166,6 +257,6 @@ impl RfcGraph {
     ///
     /// The function will iterate in the graph recursively for `recursion_max`.
     pub async fn get(root: i32, recursion_max: u32) -> Vec<i32> {
-        RfcGraph::default().rec_get_rfc(root, recursion_max).await
+        Self::default().rec_get_rfc(root, recursion_max).await
     }
 }
