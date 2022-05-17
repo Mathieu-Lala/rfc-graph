@@ -3,8 +3,11 @@ on:
   push:
     branches:
       - "main"
+    tags-ignore:
+      - "v*"
+
 jobs:
-  check-package:
+  release-crates-io:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
