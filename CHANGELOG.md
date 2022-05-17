@@ -3,4 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
-* make the cargo release + github pages work
+### Added
+
+- fix changelog hopefully
+
+### Removed
+
+- release metatdata in `Cargo.toml`
