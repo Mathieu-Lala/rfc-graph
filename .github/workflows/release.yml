@@ -7,10 +7,11 @@ on:
 jobs:
   release-crates-io:
     runs-on: ubuntu-latest
+    if: github.actor != 'LALA [bot]'
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
       - uses: actions/cache@v1
         with:
           path: |
@@ -27,6 +28,6 @@ jobs:
           override: true
       - run: cargo install cargo-release
       - run: |
-          git config --global user.name 'Mathieu LALA'
+          git config --global user.name 'LALA [bot]'
           git config --global user.email 'mathieu.lala@epitech.eu'
       - run: cargo release rc --workspace --execute --no-confirm --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
