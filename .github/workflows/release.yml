@@ -8,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install gsasl
-        run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev
       - uses: actions/cache@v1
         with:
           path: |
@@ -25,6 +23,4 @@ jobs:
           toolchain: stable
           override: true
       - run: cargo install cargo-release
-      - uses: actions-rs/cargo@v1
-        with:
-          command: release rc --workspace
+      - run: cargo release rc --workspace
