@@ -6,6 +6,7 @@
 ### Added
 
 - fix changelog hopefully
+- fix action on PR
 
 ### Removed
 
