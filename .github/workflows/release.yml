@@ -23,4 +23,4 @@ jobs:
           toolchain: stable
           override: true
       - run: cargo install cargo-release
-      - run: cargo release rc --workspace --execute
+      - run: cargo release rc --workspace --execute --no-confirm
