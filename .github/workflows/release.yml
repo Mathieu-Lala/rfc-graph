@@ -15,7 +15,7 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db/
-            target
+            ./target
           key: "${{ runner.os }}-cargo-build-stable-${{ hashFiles('**/Cargo.lock') }}"
       - uses: actions-rs/toolchain@v1
         with:
@@ -23,4 +23,4 @@ jobs:
           toolchain: stable
           override: true
       - run: cargo install cargo-release
-      - run: cargo release rc --workspace
+      - run: cargo release rc --workspace --execute
