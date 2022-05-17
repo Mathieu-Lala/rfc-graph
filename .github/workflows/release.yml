@@ -10,6 +10,21 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+      - name: Get bump method
+        run: |
+          if [ ${{ github.event.label.name == 'bump: Candidate' }} ]; then
+            echo '::set-output name=BUMP::rc'
+          elif [ ${{ github.event.label.name == 'bump: Patch' }} ]; then
+            echo '::set-output name=BUMP::patch'
+          elif [ ${{ github.event.label.name == 'bump: Minor' }} ]; then
+            echo '::set-output name=BUMP::minor'
+          elif [ ${{ github.event.label.name == 'bump: Major' }} ]; then
+            echo '::set-output name=BUMP::major'
+          else
+            exit 1
+          fi
+        id: get-bump-method
+      - run: echo "The selected bump is ${{ steps.get-bump-method.outputs.BUMP }}"
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT }}
