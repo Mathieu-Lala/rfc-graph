@@ -42,13 +42,13 @@ Output generated:
 $> cargo run -- --root 5322 --recursion-max 1
 ```
 
-![rfc 5322 one recursion](doc/5322-level-1.svg)
+![rfc 5322 one recursion](docs/5322-level-1.svg)
 
 ```sh
 $> cargo run -- --root 5322 --recursion-max 2
 ```
 
-![rfc 5322 two recursion](doc/5322-level-2.svg)
+![rfc 5322 two recursion](docs/5322-level-2.svg)
 
 The referencing in the rfcs are exponential, so you **might not** want to run with `--recursion-max 4`
 
