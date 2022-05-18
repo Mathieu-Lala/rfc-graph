@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Get bump method
         run: |
-          echo "labels:" ${{ github.event.pull_request.labels }}
-          echo ${{ github.event.pull_request.labels }} | grep "bump: Minor"
+          echo "labels:" ${{ github.event.pull_request.labels.*.name }}
+          echo ${{ github.event.pull_request.labels.*.name }} | grep "bump: Minor"
           if [ ${{ github.event.label.name == 'bump: Candidate' }} ]; then
             echo '::set-output name=BUMP::rc'
           elif [ ${{ github.event.label.name == 'bump: Patch' }} ]; then
