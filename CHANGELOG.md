@@ -4,6 +4,8 @@
 
 ## [Unreleased] - ReleaseDate
 
+## [0.2.0] - 2022-05-18
+
 * just a try with label minor
 
 ## [0.1.3-rc.10] - 2022-05-18
