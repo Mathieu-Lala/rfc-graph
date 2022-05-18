@@ -17,19 +17,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, $LABEL_CANDIDATE)
+        if: contains(github.event.pull_request.labels.*.name, '$LABEL_CANDIDATE')
         run: echo '::set-output name=BUMP::rc'
         id: get-bump-method
       - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, $LABEL_PATCH)
+        if: contains(github.event.pull_request.labels.*.name, '$LABEL_PATCH')
         run: echo '::set-output name=BUMP::patch'
         id: get-bump-method
       - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, $LABEL_MINOR)
+        if: contains(github.event.pull_request.labels.*.name, '$LABEL_MINOR')
         run: echo '::set-output name=BUMP::minor'
         id: get-bump-method
       - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, $LABEL_MAJOR)
+        if: contains(github.event.pull_request.labels.*.name, '$LABEL_MAJOR')
         run: echo '::set-output name=BUMP::major'
         id: get-bump-method
       - run: echo "The selected bump is ${{ steps.get-bump-method.outputs.BUMP }}"
