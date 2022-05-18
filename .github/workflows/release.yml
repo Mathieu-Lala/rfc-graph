@@ -19,13 +19,13 @@ jobs:
       - name: Get bump method
         id: get-bump-method
         run: |
-          if [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_CANDIDATE') }} ]; then
+          if [ ${{ contains(github.event.pull_request.labels.*.name, $LABEL_CANDIDATE) }} ]; then
             echo '::set-output name=BUMP::rc'
-          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_PATCH') }} ]; then
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, $LABEL_PATCH) }} ]; then
             echo '::set-output name=BUMP::patch'
-          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_MINOR') }} ]; then
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, $LABEL_MINOR) }} ]; then
             echo '::set-output name=BUMP::minor'
-          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_MAJOR') }} ]; then
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, $LABEL_MAJOR) }} ]; then
             echo '::set-output name=BUMP::major'
           else
             exit 1
