@@ -25,6 +25,7 @@ jobs:
           else
             exit 1
           fi
+      - run: echo ${{ steps.get-bump-method.outputs.BUMP }}
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT }}
