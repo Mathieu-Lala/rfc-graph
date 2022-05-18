@@ -5,12 +5,6 @@ on:
       - "main"
     types: [closed]
 
-env:
-  LABEL_CANDIDATE: "bump: Candidate"
-  LABEL_PATCH: "bump: Patch"
-  LABEL_MINOR: "bump: Minor"
-  LABEL_MAJOR: "bump: Major"
-
 jobs:
   release-crates-io:
     if: github.event.pull_request.merged == true
@@ -20,17 +14,18 @@ jobs:
         id: get-bump-method
         run: |
           echo ${{ github.event.pull_request.labels.*.name }}
-          if [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_CANDIDATE') }} ]; then
+          if [ ${{ contains(github.event.pull_request.labels.*.name, 'B-candidate') }} ]; then
             echo '::set-output name=BUMP::rc'
-          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_PATCH') }} ]; then
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, 'B-patch') }} ]; then
             echo '::set-output name=BUMP::patch'
-          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_MINOR') }} ]; then
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, 'B-minor') }} ]; then
             echo '::set-output name=BUMP::minor'
-          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_MAJOR') }} ]; then
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, 'B-major') }} ]; then
             echo '::set-output name=BUMP::major'
           else
             exit 1
           fi
+      - run: echo ${{ steps.get-bump-method.outputs.BUMP }}
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT }}
