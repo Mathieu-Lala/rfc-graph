@@ -33,4 +33,11 @@ async-recursion = "1.0.0"
 
 ## other thingy
 
-vsmtp-rsasl = "1.5.0"
+vsmtp-rsasl = { version = "1.5.0", default-features = false }
+
+[features]
+default = ["vsmtp-rsasl/default"]
+
+[package.metadata.docs.rs]
+rustc-args = ["--cfg", "docsrs"]
+features = []
