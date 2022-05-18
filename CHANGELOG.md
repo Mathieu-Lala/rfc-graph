@@ -4,6 +4,8 @@
 
 ## [Unreleased] - ReleaseDate
 
+## [0.1.3-rc.10] - 2022-05-18
+
 ### Added
 
 - set bump type depending on label
