@@ -30,3 +30,7 @@ tokio-stream = "0.1.8"
 
 async-stream = "0.3.2"
 async-recursion = "1.0.0"
+
+## other thingy
+
+vsmtp-rsasl = "1.5.0"
