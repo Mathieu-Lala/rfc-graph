@@ -17,22 +17,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, '$LABEL_CANDIDATE')
-        run: echo '::set-output name=BUMP::rc'
         id: get-bump-method
-      - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, '$LABEL_PATCH')
-        run: echo '::set-output name=BUMP::patch'
-        id: get-bump-method
-      - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, '$LABEL_MINOR')
-        run: echo '::set-output name=BUMP::minor'
-        id: get-bump-method
-      - name: Get bump method
-        if: contains(github.event.pull_request.labels.*.name, '$LABEL_MAJOR')
-        run: echo '::set-output name=BUMP::major'
-        id: get-bump-method
-      - run: echo "The selected bump is ${{ steps.get-bump-method.outputs.BUMP }}"
+        run: |
+          if [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_CANDIDATE') }} ]; then
+            echo '::set-output name=BUMP::rc'
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_PATCH') }} ]; then
+            echo '::set-output name=BUMP::patch'
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_MINOR') }} ]; then
+            echo '::set-output name=BUMP::minor'
+          elif [ ${{ contains(github.event.pull_request.labels.*.name, '$LABEL_MAJOR') }} ]; then
+            echo '::set-output name=BUMP::major'
+          else
+            exit 1
+          fi
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT }}
