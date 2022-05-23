@@ -20,17 +20,16 @@ jobs:
 
       - name: Run baseline bench
         run: |
-          cargo bench --bench proof_criterion -- --save-baseline main
           cargo bench --bench proof_iai > iai_baseline
+        # cargo bench --bench proof_criterion -- --save-baseline main
 
       - name: Checkout PR
         uses: actions/checkout@v3
 
       - name: Run bench against baseline
         run: |
-          cargo bench -q --bench proof_criterion -- --baseline main > bench_result
           cargo bench --bench proof_iai > iai_feature
-
+      # cargo bench -q --bench proof_criterion -- --baseline main > bench_result
       - name: Write result in PR
         uses: actions/github-script@v5
         with:
@@ -38,12 +37,12 @@ jobs:
             const fs = require('fs');
 
             // read the output file
-            const criterion_result = fs.readFileSync("bench_result", {encoding:'utf8', flag:'r'});
+            // const criterion_result = fs.readFileSync("bench_result", {encoding:'utf8', flag:'r'});
             const iai_baseline = fs.readFileSync("iai_baseline", {encoding:'utf8', flag:'r'});
             const iai_feature = fs.readFileSync("iai_feature", {encoding:'utf8', flag:'r'});
 
             // form message
-            const message = '👋 criterion benchmark result:\n' + criterion_result + '\n\n iai baseline result:\n' + iai_baseline + '\n\n iai feature result:\n' + iai_feature;
+            const message = '👋 criterion benchmark result:\n' + "criterion_result" + '\n\n iai baseline result:\n' + iai_baseline + '\n\n iai feature result:\n' + iai_feature;
 
             // post comment
             github.rest.issues.createComment({
