@@ -1,0 +1,14 @@
+iai_benchmark_short
+  Instructions:                1735
+  L1 Accesses:                 2363
+  L2 Accesses:                    1
+  RAM Accesses:                   1
+  Estimated Cycles:            2403
+
+iai_benchmark_long
+  Instructions:            26214735
+  L1 Accesses:             35638622
+  L2 Accesses:                    2
+  RAM Accesses:                   1
+  Estimated Cycles:        35638667
+
