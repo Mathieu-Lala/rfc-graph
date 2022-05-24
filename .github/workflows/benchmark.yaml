@@ -61,7 +61,8 @@ jobs:
             const iai_feature = fs.readFileSync("iai_feature", {encoding:'utf8', flag:'r'});
 
             // form message
-            const message = '👋 criterion benchmark result:\n' + "criterion_result" + '\n\n iai baseline result:\n' + "iai_baseline" + '\n\n iai feature result:\n' + iai_feature;
+            const quote = "```";
+            const message = `👋\n\niai changes:\n ${quote}txt\n${iai_feature}${quote}`;
 
             // post comment
             github.rest.issues.createComment({
