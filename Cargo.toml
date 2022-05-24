@@ -48,10 +48,9 @@ harness = false
 name = "proof_iai"
 harness = false
 
-
 [features]
 default = ["vsmtp-rsasl/default"]
 
 [package.metadata.docs.rs]
 rustc-args = ["--cfg", "docsrs"]
-features = []
+no-default-features = true
