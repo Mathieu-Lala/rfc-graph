@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/crates/v/rfc-graph.svg"
       alt="Crates.io" />
   </a>
-  <a href="https://docs.rs/rfc-grap">
+  <a href="https://docs.rs/rfc-graph">
     <img src="https://docs.rs/rfc-graph/badge.svg"
       alt="docs" />
   </a>
