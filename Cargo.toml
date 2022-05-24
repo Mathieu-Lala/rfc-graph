@@ -48,6 +48,16 @@ harness = false
 name = "proof_iai"
 harness = false
 
+[[bench]]
+name = "iai_proof"
+harness = false
+path = "benches/iai/proof.rs"
+
+[[bench]]
+name = "iai_proof2"
+harness = false
+path = "benches/iai/proof2.rs"
+
 [features]
 default = ["vsmtp-rsasl/default"]
 
