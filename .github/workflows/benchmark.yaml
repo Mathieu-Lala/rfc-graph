@@ -7,29 +7,47 @@ on:
   pull_request:
 
 jobs:
-  run_checks:
+  iai_benchmark:
     runs-on: ubuntu-latest
-    name: Run some basic checks
+    name: IAI Benchmarks
     steps:
-      - run: sudo apt install -y valgrind
+      - run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev valgrind
 
       - name: Checkout main
         uses: actions/checkout@v3
         with:
           ref: main
 
+      - uses: actions/cache@v1
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db/
+            ./target/release
+          key: "${{ runner.os }}-cargo-build-stable-${{ hashFiles('**/Cargo.lock') }}"
+
       - name: Run baseline bench
-        run: |
-          cargo bench --bench proof_criterion -- --save-baseline main
-          cargo bench --bench proof_iai > iai_baseline
+        run: cargo bench --bench proof_iai
+
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: baseline
+          path: ./target/iai/
 
       - name: Checkout PR
         uses: actions/checkout@v3
 
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: baseline
+          path: ./target/iai
+
       - name: Run bench against baseline
-        run: |
-          cargo bench -q --bench proof_criterion -- --baseline main > bench_result
-          cargo bench --bench proof_iai > iai_feature
+        run: cargo bench --bench proof_iai > iai_feature
 
       - name: Write result in PR
         uses: actions/github-script@v5
@@ -38,12 +56,12 @@ jobs:
             const fs = require('fs');
 
             // read the output file
-            const criterion_result = fs.readFileSync("bench_result", {encoding:'utf8', flag:'r'});
-            const iai_baseline = fs.readFileSync("iai_baseline", {encoding:'utf8', flag:'r'});
+            // const criterion_result = fs.readFileSync("bench_result", {encoding:'utf8', flag:'r'});
+            // const iai_baseline = fs.readFileSync("iai_baseline", {encoding:'utf8', flag:'r'});
             const iai_feature = fs.readFileSync("iai_feature", {encoding:'utf8', flag:'r'});
 
             // form message
-            const message = '👋 criterion benchmark result:\n' + criterion_result + '\n\n iai baseline result:\n' + iai_baseline + '\n\n iai feature result:\n' + iai_feature;
+            const message = '👋 criterion benchmark result:\n' + "criterion_result" + '\n\n iai baseline result:\n' + "iai_baseline" + '\n\n iai feature result:\n' + iai_feature;
 
             // post comment
             github.rest.issues.createComment({
