@@ -18,11 +18,32 @@ jobs:
         with:
           ref: main
 
+      - uses: actions/cache@v1
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db/
+            ./target/release
+          key: "${{ runner.os }}-cargo-build-stable-${{ hashFiles('**/Cargo.lock') }}"
+
       - name: Run baseline bench
         run: cargo bench --bench proof_iai
 
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: baseline
+          path: ./target/iai/
+
       - name: Checkout PR
         uses: actions/checkout@v3
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: baseline
 
       - name: Run bench against baseline
         run: cargo bench --bench proof_iai > iai_feature
