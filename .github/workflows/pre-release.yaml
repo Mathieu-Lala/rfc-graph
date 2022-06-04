@@ -60,3 +60,5 @@ jobs:
             ~/.cargo/git/db/
           key: "${{ runner.os }}-cargo-build-stable-${{ hashFiles('**/Cargo.lock') }}"
       - run: cargo install cargo-deb
+      - run: cargo deb
+      - run: lintian ./target/debian/*.deb
