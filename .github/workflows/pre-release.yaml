@@ -50,7 +50,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Install gsasl
-        run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev
+        run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev lintian
       - uses: actions/cache@v1
         with:
           path: |
