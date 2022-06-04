@@ -66,3 +66,7 @@ default = ["vsmtp-rsasl/default"]
 [package.metadata.docs.rs]
 rustc-args = ["--cfg", "docsrs"]
 no-default-features = true
+
+
+[package.metadata.deb]
+changelog = "./package/deb/changelog"
