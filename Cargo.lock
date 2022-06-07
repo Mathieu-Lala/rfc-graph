@@ -22,9 +22,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.54"
+version = "1.0.57"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a99269dff3bc004caa411f38845c20303f1e393ca2bd6581576fa3a7f59577d"
+checksum = "08f9b8508dccb7687a1d6c4ce66b2b0ecef467c94667de27d8d7fe1f8d2a9cdc"
 
 [[package]]
 name = "async-recursion"
@@ -1970,9 +1970,9 @@ checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 
 [[package]]
 name = "vsmtp-rsasl"
-version = "1.5.0"
+version = "1.5.1-rc1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e83f3a9c45deebffc9afcf22bd13043f71655006f753fdeb85ccfcaa90e09abb"
+checksum = "b1f1d93fd909c95245584ebb6155a93535602f75d8ddd327265005a379fc2d5e"
 dependencies = [
  "discard",
  "gsasl-sys",
