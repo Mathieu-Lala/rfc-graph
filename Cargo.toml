@@ -35,7 +35,16 @@ async-recursion = "1.0.0"
 
 ## other thingy
 
-vsmtp-rsasl = { version = "1.5.1-rc2" }
+vsmtp-rsasl = { version = "1.5.1-rc2", default-features = false }
+
+[features]
+default = ["vsmtp-rsasl/gsasl_bindgen"]
+
+[package.metadata.docs.rs]
+features = []
+all-features = false
+no-default-features = true
+
 
 [dev-dependencies]
 iai = "0.1.1"
