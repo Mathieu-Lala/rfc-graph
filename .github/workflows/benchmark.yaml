@@ -57,7 +57,7 @@ jobs:
       - id: get-comment-body
         run: |
           body=$(cat iai_feature)
-          body="Benchmark Result:```txt\n/${body}/```"
+          body = ${{ format('{0}/{1}.{2}', "Benchmark Result:```txt\n", $body, "\n```") }}
           body="${body//$'\n'/'%0A'}"
           body="${body//'%'/'%25'}"
           echo "::set-output name=body::$body"
