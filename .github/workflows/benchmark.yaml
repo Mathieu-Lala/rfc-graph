@@ -56,9 +56,13 @@ jobs:
 
       - id: get-comment-body
         run: |
-          body = "Benchmark Result:```txt\n${$(cat iai_feature)}```\n"
+          content=$(cat iai_feature)
+          echo $content
+          body="Benchmark Result:```txt\n${content}```\n"
+          echo $body
           body="${body//$'\n'/'%0A'}"
           body="${body//'%'/'%25'}"
+          echo $body
           echo "::set-output name=body::$body"
 
       - name: Create or update comment
