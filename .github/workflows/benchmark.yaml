@@ -56,7 +56,7 @@ jobs:
 
       - id: get-comment-body
         run: |
-          echo "::set-output name=body::Benchmark Result:\n```txt\n${cat iai_feature}\n```"
+          echo "::set-output name=body::\"Benchmark Result:\n```txt\n${cat iai_feature}\n```\""
 
       - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v2
