@@ -155,7 +155,7 @@ impl RfcGraph {
         let html_color = document.select(&selector).next().unwrap();
         let html_color_classes =
             RfcStatus::from_classes(html_color.value().classes().collect::<Vec<_>>()).unwrap();
-        println!("{:?}", html_color_classes);
+        println!("{html_color_classes:?}");
 
         self.cache.insert(number, links.clone());
         (links, html_color_classes)
