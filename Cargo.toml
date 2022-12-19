@@ -15,41 +15,34 @@ keywords = ["api", "rfc", "graph", "parser", "data"]
 categories = ["development-tools"]
 
 [dependencies]
-clap = { version = "3.1.0", features = ["derive"] }
+clap = { version = "4.0.29", features = ["derive"] }
 
-anyhow = "1.0.57"
+anyhow = "1.0.66"
 
-serde = "1.0.136"
+serde = "1.0.150"
 serde_json = "1.0.79"
 
-reqwest = { version = "0.11" }
-scraper = "0.12.0"
+reqwest = { version = "0.11.13" }
+scraper = "0.13.0"
 
-petgraph = "0.6.0"
+petgraph = "0.6.2"
 
-tokio = { version = "1.17.0", features = ["full"] }
-tokio-stream = "0.1.8"
+tokio = { version = "1.23.0", features = ["full"] }
+tokio-stream = "0.1.11"
 
-async-stream = "0.3.2"
+async-stream = "0.3.3"
 async-recursion = "1.0.0"
 
-## other thingy
-
-vsmtp-rsasl = { version = "1.5.1-rc2", default-features = false }
-
 [features]
-default = ["vsmtp-rsasl/gsasl_bindgen"]
 
 [package.metadata.docs.rs]
 features = []
 all-features = false
 no-default-features = true
 
-
 [dev-dependencies]
 iai = "0.1.1"
 criterion = "0.3.5"
-
 
 [[bench]]
 name = "proof_criterion"

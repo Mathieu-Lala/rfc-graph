@@ -14,7 +14,7 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let args = <Args as clap::StructOpt>::parse();
+    let args = <Args as clap::Parser>::parse();
 
     let rfcs = RfcGraph::get(args.root, args.recursion_max).await;
 

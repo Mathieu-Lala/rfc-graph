@@ -8,9 +8,6 @@
 
 const LINK: &str = "https://datatracker.ietf.org/doc/html/rfc";
 
-#[allow(unused_imports)]
-use vsmtp_rsasl::*;
-
 #[derive(Debug, Clone, Copy)]
 enum RfcStatus {
     Unknown,            // #FFF
