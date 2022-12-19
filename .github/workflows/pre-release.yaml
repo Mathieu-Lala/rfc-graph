@@ -4,6 +4,9 @@ on:
     branches:
       - "main"
 
+permissions:
+  contents: read
+
 jobs:
   check-release:
     runs-on: ubuntu-latest
@@ -26,8 +29,6 @@ jobs:
       - run: echo ${{ steps.get-bump-method.outputs.BUMP }}
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install gsasl
-        run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev
       - uses: actions/cache@v1
         with:
           path: |
@@ -49,8 +50,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install gsasl
-        run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev lintian
+      - name: Install lintian
+        run: sudo apt-get update && sudo apt-get install -y lintian
       - uses: actions/cache@v1
         with:
           path: |

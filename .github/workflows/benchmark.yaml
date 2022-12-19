@@ -3,13 +3,14 @@ name: Benchmarks
 on:
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   iai_benchmark:
     runs-on: ubuntu-latest
     name: IAI Benchmarks
     steps:
-      - run: sudo apt-get update && sudo apt-get install -y gsasl libgsasl7-dev valgrind
-
       - name: Checkout main
         uses: actions/checkout@v3
         with:
