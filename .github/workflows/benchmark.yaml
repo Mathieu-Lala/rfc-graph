@@ -3,6 +3,9 @@ name: Benchmarks
 on:
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   iai_benchmark:
     runs-on: ubuntu-latest
